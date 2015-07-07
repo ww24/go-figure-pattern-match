@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"ww24.jp/pattern/figure"
+	"github.com/ww24/go-figure-pattern-match/figure"
 )
 
 const canvasFile = "Canvas.txt"
@@ -36,5 +36,4 @@ func main() {
 	figure := canvas.GetMaxSize()
 	fmt.Printf("%dpx ", figure.Size)
 	fmt.Printf("(%d, %d)\n", figure.X, figure.Y)
-	// canvas.Figures[7].Print()
 }

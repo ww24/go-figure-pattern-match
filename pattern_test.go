@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"ww24.jp/pattern/figure"
+	"github.com/ww24/go-figure-pattern-match/figure"
 )
 
 const patternFile = "Pattern.txt"

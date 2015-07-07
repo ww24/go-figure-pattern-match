@@ -68,7 +68,7 @@ func (figure *Figure) search(figures *[]*Figure, figureCopy *Figure) {
 	x, y := func() (x int, y int) {
 		for y, line := range figureCopy.Pixels {
 			for x, col := range line {
-				if col {
+				if col == 1 {
 					return x, y
 				}
 			}
@@ -89,32 +89,32 @@ func (figure *Figure) search(figures *[]*Figure, figureCopy *Figure) {
 }
 
 func (figure *Figure) trace(x int, y int, rect *Rect) (count int) {
-	if figure.Pixels[y][x] == false {
+	if figure.Pixels[y][x] == 0 {
 		return
 	}
 
 	rect.update(x, y)
 
-	figure.Pixels[y][x] = false
+	figure.Pixels[y][x] = 0
 	count = 1
 
 	// right
-	if figure.Pixels[y][x+1] {
+	if figure.Pixels[y][x+1] == 1 {
 		count += figure.trace(x+1, y, rect)
 	}
 
 	// left
-	if figure.Pixels[y][x-1] {
+	if figure.Pixels[y][x-1] == 1 {
 		count += figure.trace(x-1, y, rect)
 	}
 
 	// bottom
-	if figure.Pixels[y+1][x] {
+	if figure.Pixels[y+1][x] == 1 {
 		count += figure.trace(x, y+1, rect)
 	}
 
 	// top
-	if figure.Pixels[y-1][x] {
+	if figure.Pixels[y-1][x] == 1 {
 		count += figure.trace(x, y-1, rect)
 	}
 

@@ -15,7 +15,7 @@ import (
 
 // Figure structure
 type Figure struct {
-	Pixels       [][]bool
+	Pixels       [][]int8
 	OffsetTop    int
 	OffsetLeft   int
 	OffsetBottom int
@@ -53,13 +53,13 @@ func NewFigure(filename string) (figure *Figure) {
 	minX := figure.Width - 1
 	maxX := 0
 
-	figure.Pixels = make([][]bool, figure.Height)
+	figure.Pixels = make([][]int8, figure.Height)
 
 	for y := 0; y < figure.Height; y++ {
 		// この行に1が存在すれば true になる
 		oneFlag := false
 
-		figure.Pixels[y] = make([]bool, figure.Width)
+		figure.Pixels[y] = make([]int8, figure.Width)
 
 		var buff string
 		_, err = fmt.Fscanln(file, &buff)
@@ -74,9 +74,9 @@ func NewFigure(filename string) (figure *Figure) {
 				panic(err)
 			}
 
-			figure.Pixels[y][x] = num == 1
+			figure.Pixels[y][x] = int8(num)
 
-			if figure.Pixels[y][x] {
+			if figure.Pixels[y][x] == 1 {
 				figure.Size++
 				oneFlag = true
 
@@ -111,10 +111,10 @@ func (figure *Figure) NewFigure(size int, rect *Rect) (fig *Figure) {
 		X:      rect.MinX,
 		Y:      rect.MinY}
 
-	fig.Pixels = make([][]bool, fig.Height)
+	fig.Pixels = make([][]int8, fig.Height)
 
 	for y := rect.MinY; y <= rect.MaxY; y++ {
-		fig.Pixels[y-rect.MinY] = make([]bool, fig.Width)
+		fig.Pixels[y-rect.MinY] = make([]int8, fig.Width)
 
 		for x := rect.MinX; x <= rect.MaxX; x++ {
 			fig.Pixels[y-rect.MinY][x-rect.MinX] = figure.Pixels[y][x]
@@ -138,17 +138,17 @@ func (figure *Figure) getInnerWidth() (width int) {
 }
 
 func (figure *Figure) getInnerHeight() (height int) {
-	height = figure.Height - figure.OffsetTop - figure.OffsetTop
+	height = figure.Height - figure.OffsetTop - figure.OffsetBottom
 	return
 }
 
 // Compare method
 func (figure *Figure) Compare(_figure *Figure) bool {
-	// if figure.getInnerWidth() != _figure.getInnerWidth() ||
-	// 	figure.getInnerHeight() != _figure.getInnerHeight() ||
-	// 	figure.Size != figure.Size {
-	// 	return false
-	// }
+	if figure.Size != figure.Size ||
+		figure.getInnerWidth() != _figure.getInnerWidth() ||
+		figure.getInnerHeight() != _figure.getInnerHeight() {
+		return false
+	}
 
 	for y, line := range figure.Pixels {
 		for x, col := range line {
@@ -165,7 +165,7 @@ func (figure *Figure) Compare(_figure *Figure) bool {
 func (figure *Figure) Print() {
 	for _, line := range figure.Pixels {
 		for _, col := range line {
-			if col {
+			if col == 1 {
 				fmt.Print(1)
 			} else {
 				fmt.Print(0)
